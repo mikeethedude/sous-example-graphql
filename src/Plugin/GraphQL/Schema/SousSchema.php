@@ -9,8 +9,8 @@ use Drupal\sous_graphql\Wrappers\QueryConnection;
 
 /**
  * @Schema(
- *   id = "mikeschema",
- *   name = "Another Test schema"
+ *   id = "sous",
+ *   name = "Sous Starter GraphQL Schema"
  * )
  */
 class GraphExampleSchema extends SdlSchemaPluginBase {

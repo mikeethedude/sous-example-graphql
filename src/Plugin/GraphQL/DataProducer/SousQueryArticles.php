@@ -30,7 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class GraphQueryArticles extends DataProducerPluginBase implements ContainerFactoryPluginInterface {
+class SousQueryArticles extends DataProducerPluginBase implements ContainerFactoryPluginInterface {
 
   const MAX_LIMIT = 100;
 

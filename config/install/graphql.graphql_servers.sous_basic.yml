@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies: {  }
+name: sous_basic
+label: 'Sous Basic'
+schema: sous
+schema_configuration:
+  composable:
+    extensions: {  }
+endpoint: /graphql
+debug: true
+caching: true
+batching: true

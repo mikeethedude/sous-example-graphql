@@ -13,7 +13,7 @@ use Drupal\sous_graphql\Wrappers\QueryConnection;
  *   name = "Sous Starter GraphQL Schema"
  * )
  */
-class GraphExampleSchema extends SdlSchemaPluginBase {
+class SousSchema extends SdlSchemaPluginBase {
 
   /**
    * {@inheritdoc}

@@ -8,16 +8,25 @@ type Query {
     offset: Int = 0
     limit: Int = 10
   ): ArticleConnection!
+  frontpage(id: Int!): Frontpage
 }
 
 type Article {
   id: Int!
   title: String!
   author: String
+  teaser_text: String
   body: String
 }
 
 type ArticleConnection {
   total: Int!
   items: [Article!]
+}
+
+type Frontpage {
+  id: Int!
+  title: String!
+  seo_title: String
+  teaser_text: String
 }

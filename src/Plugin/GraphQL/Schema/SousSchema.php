@@ -24,6 +24,7 @@ class SousSchema extends SdlSchemaPluginBase {
 
     $this->addQueryFields($registry, $builder);
     $this->addArticleFields($registry, $builder);
+    $this->addFrontpageFields($registry, $builder);
 
     // Re-usable connection type fields.
     $this->addConnectionFields('ArticleConnection', $registry, $builder);
@@ -59,6 +60,13 @@ class SousSchema extends SdlSchemaPluginBase {
       )
     );
 
+    $registry->addFieldResolver('Article', 'teaser_text',
+      $builder->produce('property_path')
+        ->map('type', $builder->fromValue('entity:node'))
+        ->map('value', $builder->fromParent())
+        ->map('path', $builder->fromValue('field_teaser_text.value'))
+    );
+
     $registry->addFieldResolver('Article', 'body',
       $builder->produce('property_path')
         ->map('type', $builder->fromValue('entity:node'))
@@ -79,10 +87,51 @@ class SousSchema extends SdlSchemaPluginBase {
         ->map('id', $builder->fromArgument('id'))
     );
 
+    $registry->addFieldResolver('Query', 'frontpage',
+      $builder->produce('entity_load')
+        ->map('type', $builder->fromValue('node'))
+        ->map('bundles', $builder->fromValue(['frontpage']))
+        ->map('id', $builder->fromArgument('id'))
+    );
+
     $registry->addFieldResolver('Query', 'articles',
       $builder->produce('sous_query_articles')
         ->map('offset', $builder->fromArgument('offset'))
         ->map('limit', $builder->fromArgument('limit'))
+    );
+  }
+
+  /**
+   * @param \Drupal\graphql\GraphQL\ResolverRegistry $registry
+   * @param \Drupal\graphql\GraphQL\ResolverBuilder $builder
+   */
+  protected function addFrontpageFields(ResolverRegistry $registry, ResolverBuilder $builder) {
+    $registry->addFieldResolver('Frontpage', 'id',
+      $builder->produce('entity_id')
+        ->map('entity', $builder->fromParent())
+    );
+
+    $registry->addFieldResolver('Frontpage', 'title',
+      $builder->compose(
+        $builder->produce('entity_label')
+          ->map('entity', $builder->fromParent()),
+        $builder->produce('uppercase')
+          ->map('string', $builder->fromParent())
+      )
+    );
+
+    $registry->addFieldResolver('Frontpage', 'seo_title',
+      $builder->produce('property_path')
+        ->map('type', $builder->fromValue('entity:node'))
+        ->map('value', $builder->fromParent())
+        ->map('path', $builder->fromValue('field_seo_title.value'))
+    );
+
+    $registry->addFieldResolver('Frontpage', 'teaser_text',
+      $builder->produce('property_path')
+        ->map('type', $builder->fromValue('entity:node'))
+        ->map('value', $builder->fromParent())
+        ->map('path', $builder->fromValue('field_teaser_text.value'))
     );
   }
 

@@ -24,6 +24,7 @@ class SousSchema extends SdlSchemaPluginBase {
 
     $this->addQueryFields($registry, $builder);
     $this->addTagsFields($registry, $builder);
+    $this->addUrlFields($registry, $builder);
     $this->addPageFields($registry, $builder);
     $this->addFrontpageFields($registry, $builder);
 
@@ -68,11 +69,17 @@ class SousSchema extends SdlSchemaPluginBase {
         ->map('path', $builder->fromValue('field_teaser_text.value'))
     );
 
-    $registry->addFieldResolver('Pages', 'tags',
+    $registry->addFieldResolver('Page', 'tags',
       $builder->produce('entity_reference')
         ->map('entity', $builder->fromParent())
         ->map('field', $builder->fromValue('field_tags'))
-      );
+    );
+
+    $registry->addFieldResolver('Page', 'url',
+      $builder->produce('entity_url')
+        ->map('entity', $builder->fromParent())
+    );
+
   }
 
   /**
@@ -92,6 +99,20 @@ class SousSchema extends SdlSchemaPluginBase {
       $builder->produce('entity_label')
         ->map('entity', $builder->fromParent())
       );
+  }
+
+  /**
+   * Url Object field resolvers.
+   *
+   * @param \Drupal\graphql\GraphQL\ResolverRegistry $registry
+   * @param \Drupal\graphql\GraphQL\ResolverBuilder $builder
+   */
+  protected function addUrlFields(ResolverRegistry $registry, ResolverBuilder $builder) {
+
+    $registry->addFieldResolver('Url', 'path',
+      $builder->produce('url_path')
+        ->map('url', $builder->fromParent())
+    );
   }
 
   /**
@@ -155,6 +176,11 @@ class SousSchema extends SdlSchemaPluginBase {
         ->map('type', $builder->fromValue('entity:node'))
         ->map('value', $builder->fromParent())
         ->map('path', $builder->fromValue('field_teaser_text.value'))
+    );
+
+    $registry->addFieldResolver('Frontpage', 'url',
+      $builder->produce('entity_url')
+        ->map('entity', $builder->fromParent())
     );
   }
 

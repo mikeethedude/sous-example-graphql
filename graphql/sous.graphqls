@@ -11,12 +11,13 @@ type Query {
   frontpage(id: Int!): Frontpage
 }
 
-type Page {
+type Page implements NodeInterface {
   id: Int!
   title: String!
   seo_title: String
   teaser_text: String
   tags: [TagTerm]
+  url: Url!
 }
 
 type PageConnection {
@@ -29,9 +30,18 @@ type TagTerm {
   name: String
 }
 
-type Frontpage {
+type Frontpage implements NodeInterface {
   id: Int!
   title: String!
   seo_title: String
   teaser_text: String
+  url: Url!
+}
+
+type Url {
+  path: String
+}
+
+interface NodeInterface {
+  id: Int!
 }

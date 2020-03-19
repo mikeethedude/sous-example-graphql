@@ -16,11 +16,17 @@ type Page {
   title: String!
   seo_title: String
   teaser_text: String
+  tags: [TagTerm]
 }
 
 type PageConnection {
   total: Int!
   items: [Page!]
+}
+
+type TagTerm {
+  id: Int
+  name: String
 }
 
 type Frontpage {

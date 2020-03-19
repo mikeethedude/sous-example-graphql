@@ -23,6 +23,7 @@ class SousSchema extends SdlSchemaPluginBase {
     $registry = new ResolverRegistry();
 
     $this->addQueryFields($registry, $builder);
+    $this->addTagsFields($registry, $builder);
     $this->addPageFields($registry, $builder);
     $this->addFrontpageFields($registry, $builder);
 
@@ -33,6 +34,8 @@ class SousSchema extends SdlSchemaPluginBase {
   }
 
   /**
+   * Page content type field resolvers.
+   *
    * @param \Drupal\graphql\GraphQL\ResolverRegistry $registry
    * @param \Drupal\graphql\GraphQL\ResolverBuilder $builder
    */
@@ -64,9 +67,36 @@ class SousSchema extends SdlSchemaPluginBase {
         ->map('value', $builder->fromParent())
         ->map('path', $builder->fromValue('field_teaser_text.value'))
     );
+
+    $registry->addFieldResolver('Pages', 'tags',
+      $builder->produce('entity_reference')
+        ->map('entity', $builder->fromParent())
+        ->map('field', $builder->fromValue('field_tags'))
+      );
   }
 
   /**
+   * Tag vocabulary field resolvers.
+   *
+   * @param \Drupal\graphql\GraphQL\ResolverRegistry $registry
+   * @param \Drupal\graphql\GraphQL\ResolverBuilder $builder
+   */
+  protected function addTagsFields(ResolverRegistry $registry, ResolverBuilder $builder) {
+
+    $registry->addFieldResolver('TagTerm', 'id',
+      $builder->produce('entity_id')
+        ->map('entity', $builder->fromParent())
+    );
+
+    $registry->addFieldResolver('TagTerm', 'name',
+      $builder->produce('entity_label')
+        ->map('entity', $builder->fromParent())
+      );
+  }
+
+  /**
+   * Root query field resolvers.
+   *
    * @param \Drupal\graphql\GraphQL\ResolverRegistry $registry
    * @param \Drupal\graphql\GraphQL\ResolverBuilder $builder
    */
@@ -93,6 +123,8 @@ class SousSchema extends SdlSchemaPluginBase {
   }
 
   /**
+   * Frontpage content type field resolvers.
+   *
    * @param \Drupal\graphql\GraphQL\ResolverRegistry $registry
    * @param \Drupal\graphql\GraphQL\ResolverBuilder $builder
    */
@@ -127,6 +159,8 @@ class SousSchema extends SdlSchemaPluginBase {
   }
 
   /**
+   * Query connection field resolvers.
+   *
    * @param string $type
    * @param \Drupal\graphql\GraphQL\ResolverRegistry $registry
    * @param \Drupal\graphql\GraphQL\ResolverBuilder $builder

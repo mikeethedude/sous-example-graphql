@@ -23,11 +23,11 @@ class SousSchema extends SdlSchemaPluginBase {
     $registry = new ResolverRegistry();
 
     $this->addQueryFields($registry, $builder);
-    $this->addArticleFields($registry, $builder);
+    $this->addPageFields($registry, $builder);
     $this->addFrontpageFields($registry, $builder);
 
     // Re-usable connection type fields.
-    $this->addConnectionFields('ArticleConnection', $registry, $builder);
+    $this->addConnectionFields('PageConnection', $registry, $builder);
 
     return $registry;
   }
@@ -36,13 +36,13 @@ class SousSchema extends SdlSchemaPluginBase {
    * @param \Drupal\graphql\GraphQL\ResolverRegistry $registry
    * @param \Drupal\graphql\GraphQL\ResolverBuilder $builder
    */
-  protected function addArticleFields(ResolverRegistry $registry, ResolverBuilder $builder) {
-    $registry->addFieldResolver('Article', 'id',
+  protected function addPageFields(ResolverRegistry $registry, ResolverBuilder $builder) {
+    $registry->addFieldResolver('Page', 'id',
       $builder->produce('entity_id')
         ->map('entity', $builder->fromParent())
     );
 
-    $registry->addFieldResolver('Article', 'title',
+    $registry->addFieldResolver('Page', 'title',
       $builder->compose(
         $builder->produce('entity_label')
           ->map('entity', $builder->fromParent()),
@@ -51,27 +51,18 @@ class SousSchema extends SdlSchemaPluginBase {
       )
     );
 
-    $registry->addFieldResolver('Article', 'author',
-      $builder->compose(
-        $builder->produce('entity_owner')
-          ->map('entity', $builder->fromParent()),
-        $builder->produce('entity_label')
-          ->map('entity', $builder->fromParent())
-      )
+    $registry->addFieldResolver('Page', 'seo_title',
+      $builder->produce('property_path')
+        ->map('type', $builder->fromValue('entity:node'))
+        ->map('value', $builder->fromParent())
+        ->map('path', $builder->fromValue('field_seo_title.value'))
     );
 
-    $registry->addFieldResolver('Article', 'teaser_text',
+    $registry->addFieldResolver('Page', 'teaser_text',
       $builder->produce('property_path')
         ->map('type', $builder->fromValue('entity:node'))
         ->map('value', $builder->fromParent())
         ->map('path', $builder->fromValue('field_teaser_text.value'))
-    );
-
-    $registry->addFieldResolver('Article', 'body',
-      $builder->produce('property_path')
-        ->map('type', $builder->fromValue('entity:node'))
-        ->map('value', $builder->fromParent())
-        ->map('path', $builder->fromValue('body.value'))
     );
   }
 
@@ -80,10 +71,10 @@ class SousSchema extends SdlSchemaPluginBase {
    * @param \Drupal\graphql\GraphQL\ResolverBuilder $builder
    */
   protected function addQueryFields(ResolverRegistry $registry, ResolverBuilder $builder) {
-    $registry->addFieldResolver('Query', 'article',
+    $registry->addFieldResolver('Query', 'page',
       $builder->produce('entity_load')
         ->map('type', $builder->fromValue('node'))
-        ->map('bundles', $builder->fromValue(['article']))
+        ->map('bundles', $builder->fromValue(['page']))
         ->map('id', $builder->fromArgument('id'))
     );
 
@@ -94,8 +85,8 @@ class SousSchema extends SdlSchemaPluginBase {
         ->map('id', $builder->fromArgument('id'))
     );
 
-    $registry->addFieldResolver('Query', 'articles',
-      $builder->produce('sous_query_articles')
+    $registry->addFieldResolver('Query', 'pages',
+      $builder->produce('sous_query_pages')
         ->map('offset', $builder->fromArgument('offset'))
         ->map('limit', $builder->fromArgument('limit'))
     );

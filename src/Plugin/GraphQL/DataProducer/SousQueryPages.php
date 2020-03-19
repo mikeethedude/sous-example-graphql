@@ -12,11 +12,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DataProducer(
- *   id = "sous_query_articles",
- *   name = @Translation("Load articles"),
- *   description = @Translation("Loads a list of articles."),
+ *   id = "sous_query_pages",
+ *   name = @Translation("Load pages"),
+ *   description = @Translation("Loads a list of pages."),
  *   produces = @ContextDefinition("any",
- *     label = @Translation("Article connection")
+ *     label = @Translation("Page connection")
  *   ),
  *   consumes = {
  *     "offset" = @ContextDefinition("integer",
@@ -30,7 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class SousQueryArticles extends DataProducerPluginBase implements ContainerFactoryPluginInterface {
+class SousQueryPages extends DataProducerPluginBase implements ContainerFactoryPluginInterface {
 
   const MAX_LIMIT = 100;
 
@@ -54,7 +54,7 @@ class SousQueryArticles extends DataProducerPluginBase implements ContainerFacto
   }
 
   /**
-   * Articles constructor.
+   * Pages constructor.
    *
    * @param array $configuration
    *   The plugin configuration.
@@ -97,7 +97,7 @@ class SousQueryArticles extends DataProducerPluginBase implements ContainerFacto
       ->currentRevision()
       ->accessCheck();
 
-    $query->condition($type->getKey('bundle'), 'article');
+    $query->condition($type->getKey('bundle'), 'page');
     $query->range($offset, $limit);
 
     $metadata->addCacheTags($type->getListCacheTags());

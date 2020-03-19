@@ -3,25 +3,24 @@ schema {
 }
 
 type Query {
-  article(id: Int!): Article
-  articles(
+  page(id: Int!): Page
+  pages(
     offset: Int = 0
     limit: Int = 10
-  ): ArticleConnection!
+  ): PageConnection!
   frontpage(id: Int!): Frontpage
 }
 
-type Article {
+type Page {
   id: Int!
   title: String!
-  author: String
+  seo_title: String
   teaser_text: String
-  body: String
 }
 
-type ArticleConnection {
+type PageConnection {
   total: Int!
-  items: [Article!]
+  items: [Page!]
 }
 
 type Frontpage {
